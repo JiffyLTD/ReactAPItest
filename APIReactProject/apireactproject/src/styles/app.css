@@ -6,17 +6,99 @@
 
 #root{
     display:flex;
-    justify-content:center;
+    flex-direction: column;
+    align-items: center;
 }
 .App{
-    width: 800px;
+    width: 100%;
 }
 
 .post{
     display: flex;
     padding:15px;
     border: 2px solid blue;
+    border-radius: 16px;
     margin-top: 15px;
     justify-content:space-between;
     align-items:center;
+    width: 800px;
+    margin-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.filter{
+    margin-top: 30px;
+    display:flex;
+    justify-content:center;
+}
+
+.postList{
+    border: 1px solid blue;
+    border-radius: 16px;
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.post-enter {
+    opacity: 0;
+  }
+  
+.post-enter-active {
+    opacity: 1;
+    transition: opacity 600ms ease-in;
+}
+
+.post-exit {
+    opacity: 1;
+}
+
+.post-exit-active {
+    opacity: 0;
+    transition: opacity 600ms ease-in;
+}
+  
+.page-buttons{
+    margin-top: 15px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    margin-right: 30%;
+}
+
+.page-button{
+    font-size: 22px;
+    margin-left: 10px;
+    padding: 10px;
+    border: 1px solid blue;
+    border-radius: 30%;
+    cursor: pointer;
+}
+
+.page-current{
+    background: blue;
+    color: white;
+}
+
+.header{
+    height: 100px;
+    width: 100%;
+    display: flex;  
+    background: darkblue;
+    vertical-align: baseline;
+}
+
+.header-buttons{
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 30px;
+    width: 100px;
+    color: white;
+    font-size: 22px;
+    margin-left: 30px;
+    background:#00ddff;
+    border-radius: 16px;
+    text-align: center;
+    text-decoration: none;
 }
