@@ -1,2 +1,4 @@
 A:\C# PROJECTS\ReactAPItest\APIReactProject\APIReactProject\obj\Debug\frontend.esproj.SuggestedBindingRedirects.cache
 A:\C# PROJECTS\ReactAPItest\APIReactProject\APIReactProject\obj\Debug\frontend.esproj.CoreCompileInputs.cache
+A:\CSharpPROJECTS\ReactAPItest\APIReactProject\APIReactProject\obj\Debug\frontend.esproj.SuggestedBindingRedirects.cache
+A:\CSharpPROJECTS\ReactAPItest\APIReactProject\APIReactProject\obj\Debug\frontend.esproj.CoreCompileInputs.cache
