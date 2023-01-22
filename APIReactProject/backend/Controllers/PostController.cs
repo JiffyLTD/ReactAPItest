@@ -17,7 +17,7 @@ namespace backend.Controllers
 
         [HttpGet]
         [Route("/getAllPosts")]
-        public JsonResult getAllPosts()
+        public JsonResult GetAllPosts()
         {
             //Добавляем заголовок общего количества постов в БД
             Response.Headers.Append("post-count", $"{_dbContext.posts.ToList().Count}");
@@ -27,7 +27,7 @@ namespace backend.Controllers
 
         [HttpGet]
         [Route("/getAllPosts/limit={_limit:int}&page={_page:int}")]
-        public JsonResult getAllPosts(int _limit, int _page)
+        public JsonResult GetAllPosts(int _limit, int _page)
         {
             //Добавляем заголовок общего количества постов в БД
             Response.Headers.Append("post-count", $"{_dbContext.posts.ToList().Count}");
