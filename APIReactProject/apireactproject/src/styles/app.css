@@ -62,9 +62,10 @@
 .page-buttons{
     margin-top: 15px;
     margin-bottom: 30px;
-    display: flex;
-    justify-content: center;
-    margin-right: 30%;
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 .page-button{

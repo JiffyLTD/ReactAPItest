@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using backend.Data;
+using backend.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
 namespace backend.Controllers
@@ -7,90 +9,48 @@ namespace backend.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        public PostController() { }
-
-        public class LowerCaseNamingPolicy : JsonNamingPolicy
+        private AppDbContext _dbContext;
+        public PostController(AppDbContext dbContext)
         {
-            public override string ConvertName(string name) =>
-                name.ToLower();
+            _dbContext = dbContext;
         }
 
         [HttpGet]
         [Route("/getAllPosts")]
-        public JsonResult GetAll(int? _limit, int? _page)
+        public JsonResult getAllPosts()
         {
-            Post[] posts = new Post[22];
+            //Добавляем заголовок общего количества постов в БД
+            Response.Headers.Append("post-count", $"{_dbContext.posts.ToList().Count}");
 
-            int postsCount = 0;
-            for (int i = 0; i <= 21; i++)
-            {
-                Post post = new();
-
-                post.Id = i;
-                post.Title = "TestTitle " + i;
-                post.Body = "TestBody " + i;
-
-                posts[i] = post;
-                postsCount++;
-            }
-
-            Response.Headers.Append("post-count", $"{postsCount}");
-
-            var jsonOptions = new System.Text.Json.JsonSerializerOptions 
-            {
-                WriteIndented = true,
-                PropertyNamingPolicy = new LowerCaseNamingPolicy(),
-            };
-
-            if(_page == 1)
-            {
-                Post[] posts2 = new Post[10];
-
-                for(int j = 0;j < 10; j++)
-                {
-                    posts2[j] = posts[j];
-                }
-
-                return new JsonResult(posts2,jsonOptions);
-            }
-            if (_page == 2)
-            {
-                Post[] posts2 = new Post[10];
-
-                int count = 0;
-
-                for (int j = 10; j < 20; j++)
-                {
-                    posts2[count] = posts[j];
-                    count++;
-                }
-
-                return new JsonResult(posts2, jsonOptions);
-            }
-            if (_page == 3)
-            {
-                Post[] posts2 = new Post[2];
-
-                int count = 0;
-
-                for (int j = 20; j < 22; j++)
-                {
-                    posts2[count] = posts[j];
-                    count++;
-                }
-
-                return new JsonResult(posts2, jsonOptions);
-            }
-
-            return  new JsonResult(posts, jsonOptions);
+            return new JsonResult(_dbContext.posts.ToList());
         }
-    }
 
-    public class Post
-    {
-        public int Id { get; set; }
-        public string Title { get; set; } = null!;
-        public string Body { get; set; } = null!;
+        [HttpGet]
+        [Route("/getAllPosts/limit={_limit:int}&page={_page:int}")]
+        public JsonResult getAllPosts(int _limit, int _page)
+        {
+            //Добавляем заголовок общего количества постов в БД
+            Response.Headers.Append("post-count", $"{_dbContext.posts.ToList().Count}");
+
+
+            var allPosts = _dbContext.posts.ToList();
+
+            List<Post> posts = new List<Post>();
+
+            int postIndextInList = 0;
+            while (postIndextInList < _limit)
+            {
+                    try
+                    {
+                        posts.Add(allPosts[postIndextInList + _limit * _page - _limit]);
+                    }
+                    catch { }
+
+                postIndextInList++;
+            }
+
+            return new JsonResult(posts);
+        }
     }
 }
 
