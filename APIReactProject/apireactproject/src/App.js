@@ -13,7 +13,8 @@ function App() {
             <Routes>
                 <Route path="/about" element={<About/>} />
                 <Route path="/posts" element={<Posts/>} />
-                <Route path="/error" element={<Error/>} />
+                <Route path="/error" element={<Error />} />
+                <Route path="/" element={<Navigate replace to="/about" />} />
                 <Route path="*" element={<Navigate replace to="/error"/>} />
             </Routes>
         </BrowserRouter>

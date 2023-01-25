@@ -17,14 +17,12 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.UseRouting();
+
+app.UseAuthorization();
 
 app.UseCors(builder => builder.WithOrigins("https://localhost:3000").AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("post-count"));
 
-app.UseEndpoints(endpoints => {
-    endpoints.MapControllers();
-});
+app.MapControllers();
 
 app.Run();

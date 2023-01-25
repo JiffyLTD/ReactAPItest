@@ -1,7 +1,7 @@
 ﻿using backend.Data;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
@@ -17,39 +17,94 @@ namespace backend.Controllers
 
         [HttpGet]
         [Route("/getAllPosts")]
-        public JsonResult GetAllPosts()
+        public async Task<JsonResult> GetAllPosts()
         {
-            //Добавляем заголовок общего количества постов в БД
-            Response.Headers.Append("post-count", $"{_dbContext.posts.ToList().Count}");
+            var allPosts = await _dbContext.posts.ToListAsync();
 
-            return new JsonResult(_dbContext.posts.ToList());
+            //Добавляем заголовок общего количества постов в БД
+            Response.Headers.Append("post-count", $"{allPosts.Count}");
+
+            return new JsonResult(allPosts);
         }
 
         [HttpGet]
         [Route("/getAllPosts/limit={_limit:int}&page={_page:int}")]
-        public JsonResult GetAllPosts(int _limit, int _page)
+        public async Task<JsonResult> GetAllPosts(int _limit, int _page)
         {
+            var allPosts = await _dbContext.posts.ToListAsync();
+
             //Добавляем заголовок общего количества постов в БД
-            Response.Headers.Append("post-count", $"{_dbContext.posts.ToList().Count}");
+            Response.Headers.Append("post-count", $"{allPosts.Count}");
 
+            List<Post> partOfPosts = new List<Post>();
 
-            var allPosts = _dbContext.posts.ToList();
-
-            List<Post> posts = new List<Post>();
-
-            int postIndextInList = 0;
-            while (postIndextInList < _limit)
+            int postIndexInList = 0;
+            while (postIndexInList < _limit)
             {
                     try
                     {
-                        posts.Add(allPosts[postIndextInList + _limit * _page - _limit]);
+                        var postIndex = postIndexInList + _limit * _page - _limit;
+
+                        if(postIndex < allPosts.Count)
+                        {
+                            partOfPosts.Add(allPosts[postIndex]);
+                        }
                     }
                     catch { }
 
-                postIndextInList++;
+                postIndexInList++;
             }
 
-            return new JsonResult(posts);
+            return new JsonResult(partOfPosts);
+        }
+
+        [HttpPost]
+        [Route("/addNewPost")]
+        public async Task<string> AddNewPost(Post newPost)
+        {
+            try
+            {
+                if (newPost.Title == string.Empty || newPost.Body == string.Empty)
+                {
+                    return "Необходимо заполнить данные!";
+                }
+                else
+                {
+                    await _dbContext.posts.AddAsync(newPost);
+                    await _dbContext.SaveChangesAsync();
+
+                    return "Пост успешно добавлен!";
+                }
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        [HttpDelete]
+        [Route("/deletePost/id={id:int}")]
+        public async Task<string> DeletePost(int id)
+        {
+            try
+            {
+                var post = await _dbContext.posts.FindAsync(id);
+                if (post != null)
+                {
+                    _dbContext.posts.Remove(post);
+                    await _dbContext.SaveChangesAsync();
+
+                    return "Пост успешно удален!";
+                }
+                else
+                {
+                    return "Пост не найден!";
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
     }
 }

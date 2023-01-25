@@ -33,13 +33,16 @@ function Posts() {
         fetchPosts();
     }, [page]);
 
-    const createPost = (newPost) =>{
-        setPosts([...posts, newPost])
-        setModal(false)
+    const createPost = (serverRequest) =>{
+        alert(serverRequest.data);
+        fetchPosts();
+        setModal(false);
     }
 
-    const removePost = (post) =>{
-        setPosts(posts.filter(p => p.id !== post.id))
+    const removePost = async (id) =>{
+        const response = await PostService.deletePost(id);
+        alert(response.data);
+        fetchPosts();
     }
 
     const changePage = (page) => {
